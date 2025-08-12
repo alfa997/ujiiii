@@ -1,312 +1,373 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Portal</title>
+    <title>Game Pencocokan Kosakata Geometri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary: #4a6bff;
-            --secondary: #ff6b6b;
-            --dark: #333;
-            --light: #f8f9fa;
-            --telegram: #0088cc;
-            --linktree: #40ef40;
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+            40%, 43% { transform: translate3d(0, -30px, 0); }
+            70% { transform: translate3d(0, -15px, 0); }
+            90% { transform: translate3d(0, -4px, 0); }
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--light);
-            flex-direction: column;
+        @keyframes celebration {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1.2) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
         
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeIn 0.5s ease-in-out;
-            margin-bottom: 30px;
-        }
+        .bounce { animation: bounce 0.6s ease-in-out; }
+        .pulse { animation: pulse 0.5s ease-in-out; }
+        .celebration { animation: celebration 0.8s ease-in-out; }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .logo h1 {
-            margin-top: 15px;
-            font-size: 24px;
-            font-weight: 600;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .input-group input {
-            width: 100%;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50px;
+        .matched {
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
+            transform: scale(0.95);
         }
         
-        .input-group input:focus {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 2px var(--primary);
+        .selected {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
         
-        .input-group label {
-            position: absolute;
-            left: 20px;
-            top: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-        
-        .input-group input:focus + label,
-        .input-group input:valid + label {
-            transform: translateY(-25px);
-            font-size: 12px;
-            color: white;
-            background: var(--primary);
-            padding: 2px 10px;
-            border-radius: 20px;
-        }
-        
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        button:hover {
-            background: #3a5bef;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .forgot-password {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .forgot-password a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-        
-        .forgot-password a:hover {
-            color: white;
-            text-decoration: underline;
-        }
-        
-        .contact-section {
-            margin-top: 30px;
-            text-align: center;
-        }
-        
-        .contact-section p {
-            margin-bottom: 15px;
-            position: relative;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .contact-section p::before,
-        .contact-section p::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        .contact-section p::before {
-            left: 0;
-        }
-        
-        .contact-section p::after {
-            right: 0;
-        }
-        
-        .contact-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .contact-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-icon.linktree:hover {
-            background: var(--linktree);
-            transform: translateY(-3px);
-        }
-        
-        .contact-icon.telegram:hover {
-            background: var(--telegram);
-            transform: translateY(-3px);
-        }
-        
-        .contact-icon img {
-            width: 24px;
-            height: 24px;
-        }
-        
-        .error-message {
-            color: #ff6b6b;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 14px;
-            display: none;
-        }
-        
-        .default-credential {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
+        .hint-glow {
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.7);
+            animation: pulse 1s infinite;
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <div class="logo">
-            <img src="https://via.placeholder.com/80" alt="Logo">
-            <h1>Welcome Back</h1>
-        </div>
-        
-        <div class="error-message" id="errorMessage">
-            Invalid username or password. Please try again.
-        </div>
-        
-        <form id="loginForm">
-            <div class="input-group">
-                <input type="text" id="username" required value="daffa">
-                <label for="username">Username</label>
+<body class="bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">🔺 Game Pencocokan Geometri 🔺</h1>
+            <p class="text-white text-lg">Cocokkan istilah geometri dengan definisinya!</p>
+            <div class="mt-4 flex justify-center items-center gap-6 text-white">
+                <div class="bg-white/20 px-4 py-2 rounded-lg">
+                    <span class="font-semibold">Skor: </span>
+                    <span id="score" class="text-yellow-300 font-bold">0</span>
+                </div>
+                <div class="bg-white/20 px-4 py-2 rounded-lg">
+                    <span class="font-semibold">Cocok: </span>
+                    <span id="matches" class="text-green-300 font-bold">0/6</span>
+                </div>
             </div>
-            
-            <div class="input-group">
-                <input type="password" id="password" required value="daffa123">
-                <label for="password">Password</label>
-            </div>
-            
-            <button type="submit">Login</button>
-            
-            <div class="default-credential">
-               
-            </div>
-        </form>
-        
-        <div class="forgot-password">
-            <a href="#">Forgot Password?</a>
         </div>
-        
-        <div class="contact-section">
-            <p>Hubungi Kami</p>
-            <div class="contact-icons">
-                <a href="https://linktr.ee/alfaRow" target="_blank" class="contact-icon linktree">
-                    <img src="https://d1fdloi71mui9q.cloudfront.net/V5hQVPbSRe6q3wGS3DZk_LinktreeLogo.png" alt="Linktree">
-                </a>
-                <a href="https://t.me/alfaRowHostingOffc" target="_blank" class="contact-icon telegram">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
-                        <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
-                    </svg>
-                </a>
+
+        <!-- Game Controls -->
+        <div class="text-center mb-6">
+            <button id="hintBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full mr-4 transition-all duration-300 transform hover:scale-105">
+                💡 Petunjuk (3 tersisa)
+            </button>
+            <button id="resetBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
+                🔄 Mulai Ulang
+            </button>
+        </div>
+
+        <!-- Game Board -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Terms Column -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-4 text-center">📝 Istilah</h2>
+                <div id="terms" class="space-y-3">
+                    <!-- Terms will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Definitions Column -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                <h2 class="text-2xl font-bold text-white mb-4 text-center">📖 Definisi</h2>
+                <div id="definitions" class="space-y-3">
+                    <!-- Definitions will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-8 text-center max-w-md mx-4 celebration">
+                <div class="text-6xl mb-4">🎉</div>
+                <h3 class="text-3xl font-bold text-green-600 mb-2">Selamat!</h3>
+                <p class="text-gray-700 mb-4">Anda berhasil mencocokkan semua istilah geometri!</p>
+                <p class="text-lg font-semibold text-blue-600 mb-4">Skor Akhir: <span id="finalScore"></span></p>
+                <button id="playAgainBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
+                    🎮 Main Lagi
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Validasi dengan username: daffa dan password: daffa123
-            if(username === 'daffa' && password === 'daffa123') {
-                // Login berhasil, redirect ke web daffa-alfarow
-                window.location.href = 'https://alfa997.github.io/ujiiii/storee';
-            } else {
-                // Tampilkan pesan error
-                document.getElementById('errorMessage').style.display = 'block';
+        class GeometryMatchingGame {
+            constructor() {
+                this.vocabulary = [
+                    { term: "Segitiga", definition: "Bangun datar yang memiliki tiga sisi dan tiga sudut" },
+                    { term: "Lingkaran", definition: "Bangun datar yang semua titiknya berjarak sama dari pusat" },
+                    { term: "Persegi", definition: "Bangun datar dengan empat sisi sama panjang dan empat sudut siku-siku" },
+                    { term: "Diameter", definition: "Garis lurus yang melewati pusat lingkaran dan menghubungkan dua titik di tepi" },
+                    { term: "Sudut Siku-siku", definition: "Sudut yang besarnya tepat 90 derajat" },
+                    { term: "Keliling", definition: "Panjang garis yang mengelilingi suatu bangun datar" }
+                ];
                 
-                // Sembunyikan setelah 3 detik
+                this.selectedTerm = null;
+                this.selectedDefinition = null;
+                this.matches = 0;
+                this.score = 0;
+                this.hintsLeft = 3;
+                this.matchedPairs = new Set();
+                
+                this.init();
+            }
+            
+            init() {
+                this.shuffleArrays();
+                this.renderGame();
+                this.bindEvents();
+            }
+            
+            shuffleArrays() {
+                // Shuffle terms and definitions separately
+                const terms = [...this.vocabulary.map(item => item.term)];
+                const definitions = [...this.vocabulary.map(item => item.definition)];
+                
+                this.shuffledTerms = this.shuffle(terms);
+                this.shuffledDefinitions = this.shuffle(definitions);
+            }
+            
+            shuffle(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+            
+            renderGame() {
+                this.renderTerms();
+                this.renderDefinitions();
+                this.updateScore();
+            }
+            
+            renderTerms() {
+                const termsContainer = document.getElementById('terms');
+                termsContainer.innerHTML = '';
+                
+                this.shuffledTerms.forEach((term, index) => {
+                    const termElement = document.createElement('div');
+                    termElement.className = 'term-card bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 font-semibold text-center';
+                    termElement.textContent = term;
+                    termElement.dataset.term = term;
+                    termElement.addEventListener('click', () => this.selectTerm(termElement));
+                    termsContainer.appendChild(termElement);
+                });
+            }
+            
+            renderDefinitions() {
+                const definitionsContainer = document.getElementById('definitions');
+                definitionsContainer.innerHTML = '';
+                
+                this.shuffledDefinitions.forEach((definition, index) => {
+                    const definitionElement = document.createElement('div');
+                    definitionElement.className = 'definition-card bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 font-medium text-center';
+                    definitionElement.textContent = definition;
+                    definitionElement.dataset.definition = definition;
+                    definitionElement.addEventListener('click', () => this.selectDefinition(definitionElement));
+                    definitionsContainer.appendChild(definitionElement);
+                });
+            }
+            
+            selectTerm(element) {
+                if (element.classList.contains('matched')) return;
+                
+                // Remove previous selection
+                document.querySelectorAll('.term-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Select current term
+                element.classList.add('selected');
+                this.selectedTerm = element;
+                
+                // Check for match if both are selected
+                if (this.selectedDefinition) {
+                    this.checkMatch();
+                }
+            }
+            
+            selectDefinition(element) {
+                if (element.classList.contains('matched')) return;
+                
+                // Remove previous selection
+                document.querySelectorAll('.definition-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Select current definition
+                element.classList.add('selected');
+                this.selectedDefinition = element;
+                
+                // Check for match if both are selected
+                if (this.selectedTerm) {
+                    this.checkMatch();
+                }
+            }
+            
+            checkMatch() {
+                const term = this.selectedTerm.dataset.term;
+                const definition = this.selectedDefinition.dataset.definition;
+                
+                // Find the correct pair
+                const correctPair = this.vocabulary.find(item => item.term === term);
+                
+                if (correctPair && correctPair.definition === definition) {
+                    // Correct match!
+                    this.handleCorrectMatch();
+                } else {
+                    // Incorrect match
+                    this.handleIncorrectMatch();
+                }
+            }
+            
+            handleCorrectMatch() {
+                // Add matched styling
+                this.selectedTerm.classList.add('matched', 'bounce');
+                this.selectedDefinition.classList.add('matched', 'bounce');
+                
+                // Remove selection styling
+                this.selectedTerm.classList.remove('selected');
+                this.selectedDefinition.classList.remove('selected');
+                
+                // Update score and matches
+                this.matches++;
+                this.score += 100;
+                this.matchedPairs.add(this.selectedTerm.dataset.term);
+                
+                // Reset selections
+                this.selectedTerm = null;
+                this.selectedDefinition = null;
+                
+                // Update display
+                this.updateScore();
+                
+                // Check if game is complete
+                if (this.matches === 6) {
+                    setTimeout(() => this.showSuccessMessage(), 1000);
+                }
+            }
+            
+            handleIncorrectMatch() {
+                // Add shake animation for incorrect match
+                this.selectedTerm.style.animation = 'pulse 0.5s ease-in-out';
+                this.selectedDefinition.style.animation = 'pulse 0.5s ease-in-out';
+                
+                // Remove selections after a delay
                 setTimeout(() => {
-                    document.getElementById('errorMessage').style.display = 'none';
-                }, 3000);
+                    this.selectedTerm.classList.remove('selected');
+                    this.selectedDefinition.classList.remove('selected');
+                    this.selectedTerm.style.animation = '';
+                    this.selectedDefinition.style.animation = '';
+                    this.selectedTerm = null;
+                    this.selectedDefinition = null;
+                }, 1000);
+                
+                // Deduct points for incorrect match
+                this.score = Math.max(0, this.score - 10);
+                this.updateScore();
             }
-        });
+            
+            updateScore() {
+                document.getElementById('score').textContent = this.score;
+                document.getElementById('matches').textContent = `${this.matches}/6`;
+            }
+            
+            showHint() {
+                if (this.hintsLeft <= 0) return;
+                
+                // Find an unmatched pair
+                const unmatchedPairs = this.vocabulary.filter(item => !this.matchedPairs.has(item.term));
+                if (unmatchedPairs.length === 0) return;
+                
+                const randomPair = unmatchedPairs[Math.floor(Math.random() * unmatchedPairs.length)];
+                
+                // Highlight the term and definition
+                const termElement = document.querySelector(`[data-term="${randomPair.term}"]`);
+                const definitionElement = document.querySelector(`[data-definition="${randomPair.definition}"]`);
+                
+                if (termElement && definitionElement) {
+                    termElement.classList.add('hint-glow');
+                    definitionElement.classList.add('hint-glow');
+                    
+                    setTimeout(() => {
+                        termElement.classList.remove('hint-glow');
+                        definitionElement.classList.remove('hint-glow');
+                    }, 3000);
+                }
+                
+                this.hintsLeft--;
+                this.score = Math.max(0, this.score - 20);
+                this.updateScore();
+                this.updateHintButton();
+            }
+            
+            updateHintButton() {
+                const hintBtn = document.getElementById('hintBtn');
+                hintBtn.textContent = `💡 Petunjuk (${this.hintsLeft} tersisa)`;
+                if (this.hintsLeft <= 0) {
+                    hintBtn.disabled = true;
+                    hintBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+            
+            showSuccessMessage() {
+                document.getElementById('finalScore').textContent = this.score;
+                document.getElementById('successMessage').classList.remove('hidden');
+            }
+            
+            resetGame() {
+                this.selectedTerm = null;
+                this.selectedDefinition = null;
+                this.matches = 0;
+                this.score = 0;
+                this.hintsLeft = 3;
+                this.matchedPairs.clear();
+                
+                // Hide success message
+                document.getElementById('successMessage').classList.add('hidden');
+                
+                // Reset hint button
+                const hintBtn = document.getElementById('hintBtn');
+                hintBtn.disabled = false;
+                hintBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                this.shuffleArrays();
+                this.renderGame();
+                this.updateHintButton();
+            }
+            
+            bindEvents() {
+                document.getElementById('hintBtn').addEventListener('click', () => this.showHint());
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
+                document.getElementById('playAgainBtn').addEventListener('click', () => this.resetGame());
+            }
+        }
         
-        // Animasi untuk input fields
-        const inputs = document.querySelectorAll('.input-group input');
-        inputs.forEach(input => {
-            // Trigger label animation for pre-filled values
-            if(input.value) {
-                input.nextElementSibling.style.transform = 'translateY(-25px)';
-                input.nextElementSibling.style.fontSize = '12px';
-                input.nextElementSibling.style.color = 'white';
-                input.nextElementSibling.style.background = '#4a6bff';
-                input.nextElementSibling.style.padding = '2px 10px';
-                input.nextElementSibling.style.borderRadius = '20px';
-            }
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new GeometryMatchingGame();
         });
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e0abdb8699f88e',t:'MTc1NTAwOTAzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
