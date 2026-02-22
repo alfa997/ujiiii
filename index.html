@@ -1,158 +1,63 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Clock WIB - Modern Design</title>
-    <style>
-        /* CSS - Styling Jam */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jam WIB</title>
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
-            color: #fff;
-            overflow: hidden;
-        }
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #111;
+    color: #00ffcc;
+    font-family: monospace;
+    text-align: center;
+}
 
-        /* Container Glassmorphism */
-        .clock-container {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px 60px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
+.container {
+    margin-top: 40%;
+}
 
-        .clock-container:hover {
-            transform: scale(1.02);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-        }
+.title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
 
-        h2 {
-            font-size: 1.2rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #00d2ff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #00d2ff;
-        }
+.clock {
+    font-size: 40px;
+    font-weight: bold;
+}
 
-        /* Display Waktu */
-        .time-wrapper {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-        }
-
-        #clock {
-            font-size: 5rem;
-            font-weight: 700;
-            background: linear-gradient(to bottom, #fff, #818181);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
-        }
-
-        #seconds {
-            font-size: 2rem;
-            color: #00d2ff;
-            font-weight: 400;
-        }
-
-        /* Display Tanggal */
-        #date {
-            margin-top: 15px;
-            font-size: 1rem;
-            color: #aaa;
-            letter-spacing: 1px;
-        }
-
-        /* Indikator WIB */
-        .timezone {
-            font-size: 0.9rem;
-            background: #00d2ff;
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            vertical-align: middle;
-            margin-left: 10px;
-        }
-    </style>
+.milli {
+    font-size: 20px;
+    color: #ffcc00;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="clock-container">
-        <h2>Waktu Indonesia Barat</h2>
-        
-        <div class="time-wrapper">
-            <div id="clock">00:00</div>
-            <div id="seconds">00</div>
-            <span class="timezone">WIB</span>
-        </div>
-
-        <div id="date">Memuat Tanggal...</div>
+<div class="container">
+    <div class="title">JAM WIB</div>
+    <div class="clock" id="clock">
+        00:00:00.<span class="milli">000</span>
     </div>
+</div>
 
-    <script>
-        // JS - Logika Waktu
-        function updateClock() {
-            const now = new Date();
+<script>
+function updateClock() {
+    var now = new Date();
 
-            // Mengatur zona waktu ke WIB (UTC+7)
-            // Intl.DateTimeFormat memastikan waktu konsisten meski diakses dari luar negeri
-            const options = {
-                timeZone: 'Asia/Jakarta',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            };
+    // Hitung WIB (UTC+7)
+    var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    var wib = new Date(utc + (3600000 * 7));
 
-            const formatter = new Intl.DateTimeFormat('id-ID', options);
-            const parts = formatter.formatToParts(now);
-            
-            let hours, minutes, seconds;
-            parts.forEach(part => {
-                if (part.type === 'hour') hours = part.value;
-                if (part.type === 'minute') minutes = part.value;
-                if (part.type === 'second') seconds = part.value;
-            });
+    var h = wib.getHours();
+    var m = wib.getMinutes();
+    var s = wib.getSeconds();
+    var ms = wib.getMilliseconds();
 
-            // Update ke DOM
-            document.getElementById('clock').textContent = `${hours}:${minutes}`;
-            document.getElementById('seconds').textContent = seconds;
-
-            // Update Tanggal
-            const dateOptions = { 
-                timeZone: 'Asia/Jakarta', 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            const dateString = now.toLocaleDateString('id-ID', dateOptions);
-            document.getElementById('date').textContent = dateString;
-        }
-
-        // Jalankan setiap detik
-        setInterval(updateClock, 1000);
-        
-        // Panggil sekali di awal agar tidak menunggu 1 detik pertama
-        updateClock();
-    </script>
-</body>
-</html>
+    if (h < 10) h = "0" + h;
+    if (m <
