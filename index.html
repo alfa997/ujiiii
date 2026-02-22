@@ -3,371 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Pencocokan Kosakata Geometri</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Digital Clock WIB - Modern Design</title>
     <style>
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
-            40%, 43% { transform: translate3d(0, -30px, 0); }
-            70% { transform: translate3d(0, -15px, 0); }
-            90% { transform: translate3d(0, -4px, 0); }
+        /* CSS - Styling Jam */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            overflow: hidden;
         }
-        
-        @keyframes celebration {
-            0% { transform: scale(1) rotate(0deg); }
-            25% { transform: scale(1.1) rotate(5deg); }
-            50% { transform: scale(1.2) rotate(-5deg); }
-            75% { transform: scale(1.1) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); }
+
+        /* Container Glassmorphism */
+        .clock-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transition: transform 0.3s ease;
         }
-        
-        .bounce { animation: bounce 0.6s ease-in-out; }
-        .pulse { animation: pulse 0.5s ease-in-out; }
-        .celebration { animation: celebration 0.8s ease-in-out; }
-        
-        .matched {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            transform: scale(0.95);
+
+        .clock-container:hover {
+            transform: scale(1.02);
+            border: 1px solid rgba(0, 255, 255, 0.3);
         }
-        
-        .selected {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+
+        h2 {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #00d2ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00d2ff;
         }
-        
-        .hint-glow {
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.7);
-            animation: pulse 1s infinite;
+
+        /* Display Waktu */
+        .time-wrapper {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        #clock {
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(to bottom, #fff, #818181);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+        }
+
+        #seconds {
+            font-size: 2rem;
+            color: #00d2ff;
+            font-weight: 400;
+        }
+
+        /* Display Tanggal */
+        #date {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+
+        /* Indikator WIB */
+        .timezone {
+            font-size: 0.9rem;
+            background: #00d2ff;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            vertical-align: middle;
+            margin-left: 10px;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 min-h-screen p-4">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-white mb-2">🔺 Game Pencocokan Geometri 🔺</h1>
-            <p class="text-white text-lg">Cocokkan istilah geometri dengan definisinya!</p>
-            <div class="mt-4 flex justify-center items-center gap-6 text-white">
-                <div class="bg-white/20 px-4 py-2 rounded-lg">
-                    <span class="font-semibold">Skor: </span>
-                    <span id="score" class="text-yellow-300 font-bold">0</span>
-                </div>
-                <div class="bg-white/20 px-4 py-2 rounded-lg">
-                    <span class="font-semibold">Cocok: </span>
-                    <span id="matches" class="text-green-300 font-bold">0/6</span>
-                </div>
-            </div>
+<body>
+
+    <div class="clock-container">
+        <h2>Waktu Indonesia Barat</h2>
+        
+        <div class="time-wrapper">
+            <div id="clock">00:00</div>
+            <div id="seconds">00</div>
+            <span class="timezone">WIB</span>
         </div>
 
-        <!-- Game Controls -->
-        <div class="text-center mb-6">
-            <button id="hintBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full mr-4 transition-all duration-300 transform hover:scale-105">
-                💡 Petunjuk (3 tersisa)
-            </button>
-            <button id="resetBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
-                🔄 Mulai Ulang
-            </button>
-        </div>
-
-        <!-- Game Board -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Terms Column -->
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                <h2 class="text-2xl font-bold text-white mb-4 text-center">📝 Istilah</h2>
-                <div id="terms" class="space-y-3">
-                    <!-- Terms will be populated by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Definitions Column -->
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                <h2 class="text-2xl font-bold text-white mb-4 text-center">📖 Definisi</h2>
-                <div id="definitions" class="space-y-3">
-                    <!-- Definitions will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Success Message -->
-        <div id="successMessage" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-2xl p-8 text-center max-w-md mx-4 celebration">
-                <div class="text-6xl mb-4">🎉</div>
-                <h3 class="text-3xl font-bold text-green-600 mb-2">Selamat!</h3>
-                <p class="text-gray-700 mb-4">Anda berhasil mencocokkan semua istilah geometri!</p>
-                <p class="text-lg font-semibold text-blue-600 mb-4">Skor Akhir: <span id="finalScore"></span></p>
-                <button id="playAgainBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
-                    🎮 Main Lagi
-                </button>
-            </div>
-        </div>
+        <div id="date">Memuat Tanggal...</div>
     </div>
 
     <script>
-        class GeometryMatchingGame {
-            constructor() {
-                this.vocabulary = [
-                    { term: "Segitiga", definition: "Bangun datar yang memiliki tiga sisi dan tiga sudut" },
-                    { term: "Lingkaran", definition: "Bangun datar yang semua titiknya berjarak sama dari pusat" },
-                    { term: "Persegi", definition: "Bangun datar dengan empat sisi sama panjang dan empat sudut siku-siku" },
-                    { term: "Diameter", definition: "Garis lurus yang melewati pusat lingkaran dan menghubungkan dua titik di tepi" },
-                    { term: "Sudut Siku-siku", definition: "Sudut yang besarnya tepat 90 derajat" },
-                    { term: "Keliling", definition: "Panjang garis yang mengelilingi suatu bangun datar" }
-                ];
-                
-                this.selectedTerm = null;
-                this.selectedDefinition = null;
-                this.matches = 0;
-                this.score = 0;
-                this.hintsLeft = 3;
-                this.matchedPairs = new Set();
-                
-                this.init();
-            }
+        // JS - Logika Waktu
+        function updateClock() {
+            const now = new Date();
+
+            // Mengatur zona waktu ke WIB (UTC+7)
+            // Intl.DateTimeFormat memastikan waktu konsisten meski diakses dari luar negeri
+            const options = {
+                timeZone: 'Asia/Jakarta',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+
+            const formatter = new Intl.DateTimeFormat('id-ID', options);
+            const parts = formatter.formatToParts(now);
             
-            init() {
-                this.shuffleArrays();
-                this.renderGame();
-                this.bindEvents();
-            }
-            
-            shuffleArrays() {
-                // Shuffle terms and definitions separately
-                const terms = [...this.vocabulary.map(item => item.term)];
-                const definitions = [...this.vocabulary.map(item => item.definition)];
-                
-                this.shuffledTerms = this.shuffle(terms);
-                this.shuffledDefinitions = this.shuffle(definitions);
-            }
-            
-            shuffle(array) {
-                const newArray = [...array];
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                }
-                return newArray;
-            }
-            
-            renderGame() {
-                this.renderTerms();
-                this.renderDefinitions();
-                this.updateScore();
-            }
-            
-            renderTerms() {
-                const termsContainer = document.getElementById('terms');
-                termsContainer.innerHTML = '';
-                
-                this.shuffledTerms.forEach((term, index) => {
-                    const termElement = document.createElement('div');
-                    termElement.className = 'term-card bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 font-semibold text-center';
-                    termElement.textContent = term;
-                    termElement.dataset.term = term;
-                    termElement.addEventListener('click', () => this.selectTerm(termElement));
-                    termsContainer.appendChild(termElement);
-                });
-            }
-            
-            renderDefinitions() {
-                const definitionsContainer = document.getElementById('definitions');
-                definitionsContainer.innerHTML = '';
-                
-                this.shuffledDefinitions.forEach((definition, index) => {
-                    const definitionElement = document.createElement('div');
-                    definitionElement.className = 'definition-card bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 font-medium text-center';
-                    definitionElement.textContent = definition;
-                    definitionElement.dataset.definition = definition;
-                    definitionElement.addEventListener('click', () => this.selectDefinition(definitionElement));
-                    definitionsContainer.appendChild(definitionElement);
-                });
-            }
-            
-            selectTerm(element) {
-                if (element.classList.contains('matched')) return;
-                
-                // Remove previous selection
-                document.querySelectorAll('.term-card').forEach(card => {
-                    card.classList.remove('selected');
-                });
-                
-                // Select current term
-                element.classList.add('selected');
-                this.selectedTerm = element;
-                
-                // Check for match if both are selected
-                if (this.selectedDefinition) {
-                    this.checkMatch();
-                }
-            }
-            
-            selectDefinition(element) {
-                if (element.classList.contains('matched')) return;
-                
-                // Remove previous selection
-                document.querySelectorAll('.definition-card').forEach(card => {
-                    card.classList.remove('selected');
-                });
-                
-                // Select current definition
-                element.classList.add('selected');
-                this.selectedDefinition = element;
-                
-                // Check for match if both are selected
-                if (this.selectedTerm) {
-                    this.checkMatch();
-                }
-            }
-            
-            checkMatch() {
-                const term = this.selectedTerm.dataset.term;
-                const definition = this.selectedDefinition.dataset.definition;
-                
-                // Find the correct pair
-                const correctPair = this.vocabulary.find(item => item.term === term);
-                
-                if (correctPair && correctPair.definition === definition) {
-                    // Correct match!
-                    this.handleCorrectMatch();
-                } else {
-                    // Incorrect match
-                    this.handleIncorrectMatch();
-                }
-            }
-            
-            handleCorrectMatch() {
-                // Add matched styling
-                this.selectedTerm.classList.add('matched', 'bounce');
-                this.selectedDefinition.classList.add('matched', 'bounce');
-                
-                // Remove selection styling
-                this.selectedTerm.classList.remove('selected');
-                this.selectedDefinition.classList.remove('selected');
-                
-                // Update score and matches
-                this.matches++;
-                this.score += 100;
-                this.matchedPairs.add(this.selectedTerm.dataset.term);
-                
-                // Reset selections
-                this.selectedTerm = null;
-                this.selectedDefinition = null;
-                
-                // Update display
-                this.updateScore();
-                
-                // Check if game is complete
-                if (this.matches === 6) {
-                    setTimeout(() => this.showSuccessMessage(), 1000);
-                }
-            }
-            
-            handleIncorrectMatch() {
-                // Add shake animation for incorrect match
-                this.selectedTerm.style.animation = 'pulse 0.5s ease-in-out';
-                this.selectedDefinition.style.animation = 'pulse 0.5s ease-in-out';
-                
-                // Remove selections after a delay
-                setTimeout(() => {
-                    this.selectedTerm.classList.remove('selected');
-                    this.selectedDefinition.classList.remove('selected');
-                    this.selectedTerm.style.animation = '';
-                    this.selectedDefinition.style.animation = '';
-                    this.selectedTerm = null;
-                    this.selectedDefinition = null;
-                }, 1000);
-                
-                // Deduct points for incorrect match
-                this.score = Math.max(0, this.score - 10);
-                this.updateScore();
-            }
-            
-            updateScore() {
-                document.getElementById('score').textContent = this.score;
-                document.getElementById('matches').textContent = `${this.matches}/6`;
-            }
-            
-            showHint() {
-                if (this.hintsLeft <= 0) return;
-                
-                // Find an unmatched pair
-                const unmatchedPairs = this.vocabulary.filter(item => !this.matchedPairs.has(item.term));
-                if (unmatchedPairs.length === 0) return;
-                
-                const randomPair = unmatchedPairs[Math.floor(Math.random() * unmatchedPairs.length)];
-                
-                // Highlight the term and definition
-                const termElement = document.querySelector(`[data-term="${randomPair.term}"]`);
-                const definitionElement = document.querySelector(`[data-definition="${randomPair.definition}"]`);
-                
-                if (termElement && definitionElement) {
-                    termElement.classList.add('hint-glow');
-                    definitionElement.classList.add('hint-glow');
-                    
-                    setTimeout(() => {
-                        termElement.classList.remove('hint-glow');
-                        definitionElement.classList.remove('hint-glow');
-                    }, 3000);
-                }
-                
-                this.hintsLeft--;
-                this.score = Math.max(0, this.score - 20);
-                this.updateScore();
-                this.updateHintButton();
-            }
-            
-            updateHintButton() {
-                const hintBtn = document.getElementById('hintBtn');
-                hintBtn.textContent = `💡 Petunjuk (${this.hintsLeft} tersisa)`;
-                if (this.hintsLeft <= 0) {
-                    hintBtn.disabled = true;
-                    hintBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                }
-            }
-            
-            showSuccessMessage() {
-                document.getElementById('finalScore').textContent = this.score;
-                document.getElementById('successMessage').classList.remove('hidden');
-            }
-            
-            resetGame() {
-                this.selectedTerm = null;
-                this.selectedDefinition = null;
-                this.matches = 0;
-                this.score = 0;
-                this.hintsLeft = 3;
-                this.matchedPairs.clear();
-                
-                // Hide success message
-                document.getElementById('successMessage').classList.add('hidden');
-                
-                // Reset hint button
-                const hintBtn = document.getElementById('hintBtn');
-                hintBtn.disabled = false;
-                hintBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                
-                this.shuffleArrays();
-                this.renderGame();
-                this.updateHintButton();
-            }
-            
-            bindEvents() {
-                document.getElementById('hintBtn').addEventListener('click', () => this.showHint());
-                document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
-                document.getElementById('playAgainBtn').addEventListener('click', () => this.resetGame());
-            }
+            let hours, minutes, seconds;
+            parts.forEach(part => {
+                if (part.type === 'hour') hours = part.value;
+                if (part.type === 'minute') minutes = part.value;
+                if (part.type === 'second') seconds = part.value;
+            });
+
+            // Update ke DOM
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+            document.getElementById('seconds').textContent = seconds;
+
+            // Update Tanggal
+            const dateOptions = { 
+                timeZone: 'Asia/Jakarta', 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const dateString = now.toLocaleDateString('id-ID', dateOptions);
+            document.getElementById('date').textContent = dateString;
         }
+
+        // Jalankan setiap detik
+        setInterval(updateClock, 1000);
         
-        // Initialize the game when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new GeometryMatchingGame();
-        });
+        // Panggil sekali di awal agar tidak menunggu 1 detik pertama
+        updateClock();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e0abdb8699f88e',t:'MTc1NTAwOTAzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
